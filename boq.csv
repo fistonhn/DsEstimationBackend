@@ -1,0 +1,4 @@
+description,unit,quantity,category,code,price, amount
+imported activity A,m2,1,new category A,code A,1000, 120000
+imported activity B,m2,1,new category B,code B,9876, 948854
+imported activity C,m2,1,new category C,code C,384732, 43984
