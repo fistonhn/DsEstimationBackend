@@ -11,7 +11,7 @@
     "db:seed:dev": "cross-env NODE_ENV=development sequelize db:seed:all",
     "db:seed:test": "cross-env NODE_ENV=test sequelize db:seed:all",
     "seed": "npm run migrate:undo && npm run migrate && npx sequelize db:seed:all",
-    "clean": "rm -rf build && mkdir build",
+    "clean": "rimraf build && mkdir build",
     "build-babel": "babel -d ./build ./src -s",
     "build": "npm run migrate && npm run clean && babel ./src --out-dir build",
     "start": "node build",
@@ -57,6 +57,7 @@
     "coveralls": "^3.1.1",
     "jest": "^27.5.1",
     "nodemon": "^2.0.20",
+    "rimraf": "^6.0.1",
     "supertest": "^6.2.2",
     "turbo": "^1.2.6"
   }
