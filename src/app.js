@@ -5,6 +5,7 @@ import cors from "cors";
 import fileUpload from "express-fileupload";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../swagger.json";
+import path from "path";
 import {
   materialRoutes,
   unitRoutes,
@@ -61,6 +62,10 @@ app.use(
   })
 );
 
+// ✅ Serve frontend static files
+const frontendPath = path.join(__dirname, "../frontendBuild");
+app.use(express.static(frontendPath));
+
 // documentation
 const options = {
   customCss:
@@ -70,7 +75,7 @@ const options = {
 };
 
 app.use("/", swaggerUi.serve);
-app.get("/", swaggerUi.setup(swaggerDocument, options));
+app.get("/doc", swaggerUi.setup(swaggerDocument, options));
 
 // routes
 

@@ -16,7 +16,9 @@ router.get("/:id", verifyAccessToken, ValidateParams.isIdPresentAndValid, Exists
 router.post(
   "/register",
   Validators.isUserRegisterValid,
-  UserController.registerUser
+  // UserController.registerUser
+  UserController.createNewUser
+
 );
 router.get("/verify/signup", UserController.createUser);
 router.get("/staff/accept/verify", UserController.createStaff);

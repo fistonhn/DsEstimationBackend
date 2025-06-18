@@ -169,6 +169,58 @@ class UserController {
     }
   }
 
+  // create new user before email verification
+  static async createNewUser(req, res) {
+    const t = await sequelize.transaction();
+    try {
+      const user = {
+        ...req.body,
+      };
+      const exist = await Users.findOne({ where: { email: user.email } });
+      if (exist) return onError(res, 400, "Email already exist");
+      
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(user.password, salt);
+
+      const newuser = await Users.create(
+        {
+          isConfirmed: true,
+          name: user.name,
+          email: user.email,
+          password: hashedPassword,
+        },
+        { transaction: t }
+      );
+
+      // create trial for the user after registration and expiration is 10 days
+      const startTrialDate = new Date();
+
+      // end trial date is 10 days after start trial date
+      const endTrialDate = new Date(startTrialDate);
+      endTrialDate.setDate(endTrialDate.getDate() + 10);
+
+      await Trial.create(
+        {
+          userId: newuser.id,
+          trialStartDate: startTrialDate,
+          trialEndDate: endTrialDate,
+        },
+        { transaction: t }
+      );
+
+      await t.commit();
+      
+      return onSuccess(res, 200, `Hello, ${user.name}, Your account created successfully!`);
+    } catch (error) {
+      return onError(
+        res,
+        500,
+        "something went wrong, try again.",
+        error.message
+      );
+    }
+  }
+
   // create user after email verification
   static async createUser(req, res) {
     const t = await sequelize.transaction();
@@ -333,7 +385,6 @@ class UserController {
         if (!isMatch) return onError(res, 400, "Invalid Email or Password");
         const accessToken = await signAccessToken(user);
         await signRefreshToken(user);
-        console.log('mmm', accessToken)
         return onSuccess(res, 200, "User Logged in Successfully", {
           accessToken,
         });
