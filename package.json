@@ -20,7 +20,7 @@
     "coverage": "nyc npm test && nyc report --reporter=lcov",
     "seed:test": "npm run migrate:undo -- --env test && npm run migrate:test && npx sequelize db:seed:all --env test"
   },
-  "author": "Ndatimana Gilbert, Habiman Fiston",
+  "author": "Habiman Fiston",
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.6.2",
